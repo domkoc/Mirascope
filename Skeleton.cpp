@@ -48,8 +48,8 @@ struct Material {
 struct RoughMaterial : Material {
 	RoughMaterial(vec3 _kd, vec3 _ks, float _shininess) : Material(ROUGH){
 		ka = _kd * M_PI;
-		kd = kd;
-		ks = ks;
+		kd = _kd;
+		ks = _ks;
 		shininess = _shininess;
 	}
 };
