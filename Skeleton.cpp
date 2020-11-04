@@ -61,9 +61,10 @@ vec3 operator/(vec3 num, vec3 denom) {
     return vec3(num.x / denom.x, num.y / denom.y, num.z / denom.z);
 }
 
+const vec3 one(1, 1, 1);
+
 struct ReflectiveMaterial : Material {
     ReflectiveMaterial(vec3 n, vec3 kappa) : Material(REFLECTIVE) {
-        vec3 one(1, 1, 1);
         F0 = (((n - one) * (n - one) + kappa * kappa) / ((n + one) * (n + one) + kappa * kappa));
     }
 };
@@ -489,6 +490,12 @@ public:
         vec3 dir = lookat + right * (2.0f * (X + 0.5f) / windowWidth - 1) + up * (2.0f * (Y + 0.5f) / windowHeight - 1) - eye;
         return Ray(eye, dir);
     }
+    //TODO: mozgás
+    void Animate(float dt) {
+        vec3 d = eye - lookat;
+        eye = vec3(d.x * cos(dt) + d.z * sin(dt), d.y, -d.x * sin(dt) + d.z * cos(dt)) + lookat;
+        set(eye, lookat, up, fov);
+    }
 };
 
 struct Light {
@@ -536,6 +543,7 @@ class Scene {
     vec3 Sun = vec3(0.5, 10, 1);
 
 public:
+    //TODO: itt
     void build() {
         vec3 eye = vec3(0, 0, 1.8), vup = vec3(0, 1, 0), lookat = vec3(0, 0, 0);
         float fov = 45 * M_PI / 180;
@@ -625,6 +633,7 @@ public:
         return outRadiance;
     }
 
+    //TODO: itt
     vec3 trace(Ray ray, int depth = 0) {
         Hit hit = firstIntersect(ray);
         vec3 LeSky(0, 1, 1);
@@ -666,6 +675,9 @@ public:
         }
         return outRadiance;
     }
+
+    //TODO:Animáció
+    void Animate(float dt) { camera.Animate(dt); }
 };
 
 GPUProgram gpuProgram;
@@ -754,4 +766,7 @@ void onMouseMotion(int pX, int pY) {}
 
 void onMouse(int button, int state, int pX, int pY) {}
 
-void onIdle() {}
+void onIdle() {
+    scene.Animate(0.1f);
+    glutPostRedisplay();
+}

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
       <config projectName="GrafTemplateProject" targetName="GrafTemplateProject" />
@@ -12,14 +15,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9db55a6-394e-405e-a8f8-37d0d7e70550" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Skeleton.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Skeleton.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GrafTemplateProject" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/GrafTemplateProject.exe" beforeDir="false" afterPath="$PROJECT_DIR$/bin/GrafTemplateProject.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/freeglut.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/freeglut.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/glew32.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/glew32.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/framework.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework.h" beforeDir="false" afterPath="$PROJECT_DIR$/framework.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +31,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1ZtkD3pgKOHdfTthCYddNv4UMQP" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -52,7 +50,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="CPPToolchains" />
+    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -61,11 +59,6 @@
   </component>
   <component name="RunManager">
     <configuration name="GrafTemplateProject" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="GrafTemplateProject" TARGET_NAME="GrafTemplateProject" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="GrafTemplateProject" RUN_TARGET_NAME="GrafTemplateProject">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -110,7 +103,20 @@
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$" />
+    </ignored-roots>
+  </component>
   <component name="WindowStateProjectService">
+    <state x="474" y="304" key="Github.ShareDialog" timestamp="1604499619219">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="474" y="304" key="Github.ShareDialog/0.0.1280.800@0.0.1280.800" timestamp="1604499619219" />
+    <state x="383" y="105" key="Github.UntrackedFilesDialog" timestamp="1604499627489">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="383" y="105" key="Github.UntrackedFilesDialog/0.0.1280.800@0.0.1280.800" timestamp="1604499627489" />
     <state width="1238" height="209" key="GridCell.Tab.0.bottom" timestamp="1604499494928">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
@@ -147,13 +153,18 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state width="1238" height="264" key="GridCell.Tab.1.right/0.0.1280.800@0.0.1280.800" timestamp="1601560176548" />
-    <state x="141" y="23" key="SettingsEditor" timestamp="1601472450324">
+    <state x="141" y="23" key="SettingsEditor" timestamp="1604499578932">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="141" y="23" key="SettingsEditor/0.0.1280.800@0.0.1280.800" timestamp="1601472450324" />
-    <state x="305" y="124" width="670" height="676" key="search.everywhere.popup" timestamp="1601480686924">
-      <screen x="0" y="23" width="1280" height="706" />
+    <state x="141" y="23" key="SettingsEditor/0.0.1280.800@0.0.1280.800" timestamp="1604499578932" />
+    <state x="438" y="321" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604515570639">
+      <screen x="0" y="0" width="1280" height="800" />
     </state>
+    <state x="438" y="321" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.800@0.0.1280.800" timestamp="1604515570639" />
+    <state x="305" y="114" width="670" height="767" key="search.everywhere.popup" timestamp="1604508697539">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="305" y="114" width="670" height="767" key="search.everywhere.popup/0.0.1280.800@0.0.1280.800" timestamp="1604508697539" />
     <state x="305" y="124" width="670" height="676" key="search.everywhere.popup/0.23.1280.706@0.23.1280.706" timestamp="1601480686924" />
   </component>
 </project>
