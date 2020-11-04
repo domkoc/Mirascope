@@ -33,10 +33,36 @@
 //=============================================================================================
 #include "framework.h"
 
+enum MaterialType { ROUGH, REFLECTIVE};
+
 struct Material {
 	vec3 ka, kd, ks;
 	float  shininess;
-	Material(vec3 _kd, vec3 _ks, float _shininess) : ka(_kd* M_PI), kd(_kd), ks(_ks) { shininess = _shininess; }
+	vec3 F0;
+	MaterialType type;
+	Material(MaterialType t) {
+		type = t;
+	}
+};
+
+struct RoughMaterial : Material {
+	RoughMaterial(vec3 _kd, vec3 _ks, float _shininess) : Material(ROUGH){
+		ka = _kd * M_PI;
+		kd = kd;
+		ks = ks;
+		shininess = _shininess;
+	}
+};
+
+vec3 operator/(vec3 num, vec3 denom) {
+	return vec3(num.x / denom.x, num.y / denom.y, num.z / denom.z);
+}
+
+struct ReflectiveMaterial : Material {
+	ReflectiveMaterial(vec3 n, vec3 kappa) : Material(REFLECTIVE) {
+		vec3 one(1, 1, 1);
+		F0 = ((n - one) * (n - one) + kappa * kappa) / ((n + one) * (n + one) + kappa * kappa);
+	}
 };
 
 struct Hit {
@@ -152,8 +178,10 @@ public:
 		vec3 kd1(0.3f, 0.2f, 0.1f);
 		vec3 kd2(0.1f, 0.2f, 0.3f);
 		vec3 ks(2, 2, 2);
-		Material* material1 = new Material(kd1, ks, 50);
-		Material* material2 = new Material(kd2, ks, 50);
+		Material* material1 = new RoughMaterial(kd1, ks, 50);
+		vec3 n(1, 1, 1);
+		vec3 kappa(5, 4, 3);
+		Material* material2 = new ReflectiveMaterial(n , kappa);
 		
 		for (int i = 0; i < 150; i++)
 		{
@@ -192,18 +220,32 @@ public:
 	}
 
 	vec3 trace(Ray ray, int depth = 0) {
+		if (depth > 5) return La;
 		Hit hit = firstIntersect(ray);
 		if (hit.t < 0) return La;
-		vec3 outRadiance = hit.material->ka * La;
-		for (Light* light : lights) {
-			Ray shadowRay(hit.position + hit.normal * epsilon, light->direction);
-			float cosTheta = dot(hit.normal, light->direction);
-			if (cosTheta > 0 && !shadowIntersect(shadowRay)) {	// shadow computation
-				outRadiance = outRadiance + light->Le * hit.material->kd * cosTheta;
-				vec3 halfway = normalize(-ray.dir + light->direction);
-				float cosDelta = dot(hit.normal, halfway);
-				if (cosDelta > 0) outRadiance = outRadiance + light->Le * hit.material->ks * powf(cosDelta, hit.material->shininess);
+
+		vec3 outRadiance(0, 0, 0);
+		
+		if (hit.material->type == ROUGH) {
+			outRadiance = hit.material->ka * La;
+			for (Light* light : lights) {
+				Ray shadowRay(hit.position + hit.normal * epsilon, light->direction);
+				float cosTheta = dot(hit.normal, light->direction);
+				if (cosTheta > 0 && !shadowIntersect(shadowRay)) {	// shadow computation
+					outRadiance = outRadiance + light->Le * hit.material->kd * cosTheta;
+					vec3 halfway = normalize(-ray.dir + light->direction);
+					float cosDelta = dot(hit.normal, halfway);
+					if (cosDelta > 0) outRadiance = outRadiance + light->Le * hit.material->ks * powf(cosDelta, hit.material->shininess);
+				}
 			}
+		}
+		if (hit.material->type == REFLECTIVE) {
+			vec3 reflectedDir = ray.dir - hit.normal * dot(hit.normal, ray.dir) * 2.0f;
+			float cosa = -dot(ray.dir, hit.normal);
+			vec3 one(1, 1, 1);
+			vec3 F = hit.material->F0 + (one - hit.material->F0) * pow(1 - cosa, 5);
+			outRadiance = outRadiance + 
+						  trace(Ray(hit.position + hit.normal * epsilon, reflectedDir), depth + 1) * F;
 		}
 		return outRadiance;
 	}
