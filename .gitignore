@@ -1,2 +1,7 @@
 # Project exclude paths
 /cmake-build-debug/
+/Skeleton.vcxproj.user
+/Skeleton.vcxproj.filters
+/Skeleton.vcxproj
+/Release
+/Debug
