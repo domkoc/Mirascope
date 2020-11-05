@@ -33,7 +33,7 @@
 //=============================================================================================
 #include "framework.h"
 
-enum MaterialType { ROUGH, REFLECTIVE};
+enum MaterialType { ROUGH, REFLECTIVE };
 
 struct Material {
 	vec3 ka, kd, ks;
@@ -46,10 +46,10 @@ struct Material {
 };
 
 struct RoughMaterial : Material {
-	RoughMaterial(vec3 _kd, vec3 _ks, float _shininess) : Material(ROUGH){
+	RoughMaterial(vec3 _kd, vec3 _ks, float _shininess) : Material(ROUGH) {
 		ka = _kd * M_PI;
-		kd = kd;
-		ks = ks;
+		kd = _kd;
+		ks = _ks;
 		shininess = _shininess;
 	}
 };
@@ -58,10 +58,9 @@ vec3 operator/(vec3 num, vec3 denom) {
 	return vec3(num.x / denom.x, num.y / denom.y, num.z / denom.z);
 }
 
-vec3 one(1, 1, 1);
-
 struct ReflectiveMaterial : Material {
 	ReflectiveMaterial(vec3 n, vec3 kappa) : Material(REFLECTIVE) {
+		vec3 one(1, 1, 1);
 		F0 = ((n - one) * (n - one) + kappa * kappa) / ((n + one) * (n + one) + kappa * kappa);
 	}
 };
@@ -85,60 +84,6 @@ public:
 	virtual Hit intersect(const Ray& ray) = 0;
 };
 
-struct Quadrics : public Intersectable {
-	mat4 Q; // symmetric matrix
-	float zmin, zmax;
-	vec3 translation;
-
-	Quadrics(mat4& _Q, float _zmin, float _zmax, vec3 _translation, Material* _material) {
-		Q = _Q;
-		zmin = _zmin;
-		zmax = _zmax;
-		translation = _translation;
-		material = _material;
-	}
-
-	vec3 gradf(vec3 r) { // r.w = 1
-		vec4 g = vec4(r.x, r.y, r.z, 1) * Q * 2;
-		return vec3(g.x, g.y, g.z);
-	}
-
-	Hit intersect(const Ray& ray) {
-		Hit hit;
-		vec3 start = ray.start - translation;
-		vec4 S(start.x, start.y, start.z, 1);
-		vec4 D(ray.dir.x, ray.dir.y, ray.dir.z, 0);
-		float a = dot(D * Q, D);
-		float b = dot(S * Q, D) * 2;
-		float c = dot(S * Q, S);
-		float discr = b * b - 4.0f * a * c;
-		if (discr < 0) return hit;
-		float sqrt_discr = sqrtf(discr);
-
-		float t1 = (-b + sqrt_discr) / 2.0f / a;
-		vec3 p1 = ray.start + ray.dir * t1;
-		if (p1.z < zmin || p1.z > zmax) t1 = -1;
-
-		float t2 = (-b - sqrt_discr) / 2.0f / a;
-		vec3 p2 = ray.start + ray.dir * t2;
-		if (p2.z < zmin || p2.z > zmax) t2 = -1;
-
-		if (t1 <= 0 && t2 <= 0) return hit;
-		if (t1 <= 0) hit.t = t2;
-		else if (t2 <= 0) hit.t = t1;
-		else if (t2 < t1) hit.t = t2;
-		else hit.t = t1;
-
-		hit.position = start + ray.dir * hit.t;
-		hit.normal = normalize(gradf(hit.position));
-		hit.position = hit.position + translation;
-		hit.material = material;
-		return hit;
-	}
-	
-};
-
-/*
 struct Sphere : public Intersectable {
 	vec3 center;
 	float radius;
@@ -168,7 +113,6 @@ struct Sphere : public Intersectable {
 		return hit;
 	}
 };
-*/
 
 class Camera {
 	vec3 eye, lookat, right, up;
@@ -190,7 +134,6 @@ public:
 		return Ray(eye, dir);
 	}
 
-	/*
 	void Animate(float dt) {
 		vec3 d = eye - lookat;
 		eye = vec3(
@@ -199,7 +142,6 @@ public:
 			-d.x * sin(dt) + d.z * cos(dt)) + lookat;
 		set(eye, lookat, up, fov);
 	}
-	*/
 };
 
 struct Light {
@@ -217,63 +159,45 @@ const float epsilon = 0.0001f;
 
 class Scene {
 	std::vector<Intersectable*> objects;
+	std::vector<Light*> lights;
 	Camera camera;
-	vec3 Lsky, La;
-	std::vector<vec3> lightPoints;
-	float rTube2; // rTube^2
-	vec3 tubePos, sunDir, sunRad;
+	vec3 La;
 public:
 	void build() {
-		vec3 eye = vec3(0, 1.8, 0);
-		vec3 vup = vec3(0, 0, 1);
+		vec3 eye = vec3(0, 0, 2);
+		vec3 vup = vec3(0, 1, 0);
 		vec3 lookat = vec3(0, 0, 0);
-		float fov = 90 * M_PI / 180;
+		float fov = 45 * M_PI / 180;
 		camera.set(eye, lookat, vup, fov);
 
-		Lsky = vec3(3, 4, 5);
-		La = vec3(0.2f, 0.1f, 0.1f);
-		sunDir = normalize(vec3(1, 1, 10));
-		sunRad = vec3(100, 100, 100);
+		La = vec3(0.4f, 0.4f, 0.4f);
+		vec3 lightDirection(1, 1, 1),
+			Le(2, 2, 2);
+		lights.push_back(new Light(lightDirection, Le));
+
+		vec3 kd1(0.3f, 0.2f, 0.1f);
+		vec3 kd2(0.1f, 0.2f, 0.3f);
 		vec3 ks(2, 2, 2);
+		Material* material1 = new RoughMaterial(kd1, ks, 50);
+		vec3 n(1, 1, 1);
+		vec3 kappa(5, 4, 3);
+		Material* material2 = new ReflectiveMaterial(n, kappa);
 
-		float heightStart = 0.99, heightEnd = 2;
-		mat4 room = ScaleMatrix(vec3(-0.25f, -0.25f, -1));
-		objects.push_back(new Quadrics(room, -2, heightStart, vec3(0, 0, 0), new RoughMaterial(vec3(0.3f, 0.2f, 0.1f), ks, 50)));
-
-		rTube2 = 4 * (1 - heightStart * heightStart);
-		tubePos = vec3(0, 0, heightStart);
-		mat4 tube = ScaleMatrix(vec3(-1 / rTube2, -1 / rTube2, 1));
-		objects.push_back(new Quadrics(tube, heightStart, heightEnd, tubePos, new ReflectiveMaterial(vec3(0.14f, 0.16f, 0.13f), vec3(4.1f, 2.3f, 3.1f))));
-
-		mat4 cylinder = ScaleMatrix(vec3(-9, -9, 0));
-		objects.push_back(new Quadrics(cylinder, -2, 0.5, vec3(0.8f, -0.5f, 0), new RoughMaterial(vec3(0.1f, 0.2f, 0.3f), ks, 50)));
-
-		mat4 paraboloid = mat4(
-			16, 0, 0, 0,
-			0, 16, 0, 0,
-			0, 0, 0, 4,
-			0, 0, 4, 0
-		);
-		objects.push_back(new Quadrics(paraboloid, -2, 1, vec3(-0.6f, -0.6f, 0.5f), new ReflectiveMaterial(vec3(0.17f, 0.35f, 1.5f), vec3(3.1f, 2.7f, 1.9f))));
-
-		mat4 hyperboloid = ScaleMatrix(vec3(-128, -129, 9));
-		objects.push_back(new Quadrics(hyperboloid, -2, 0.3f, vec3(0.9f, 0.5f, 0), new RoughMaterial(vec3(0.1f, 0.3f, 0.1f), ks, 20)));
-
-		float rTube = sqrtf(rTube2);
-		while (lightPoints.size() < 50) {
-			vec2 p(rnd() * 2 - 1, rnd() * 2 - 1);
-			if (dot(p, p) < 1) lightPoints.push_back(vec3(p.x * rTube, p.y * rTube, heightStart));
+		for (int i = 0; i < 150; i++)
+		{
+			objects.push_back(new Sphere(vec3(rnd() - 0.5f, rnd() - 0.5f, rnd() - 0.5f), rnd() * 0.1f, material1));
+			objects.push_back(new Sphere(vec3(rnd() - 0.5f, rnd() - 0.5f, rnd() - 0.5f), rnd() * 0.1f, material2));
 		}
 	}
 
-	void render(std::vector<vec3>& image) {
+	void render(std::vector<vec4>& image) {
 		long timeStart = glutGet(GLUT_ELAPSED_TIME);
-		
+
 		for (int Y = 0; Y < windowHeight; Y++) {
 #pragma omp parallel for
 			for (int X = 0; X < windowWidth; X++) {
-				vec3 color = trace(camera.getRay(X, Y), 0);
-				image[Y * windowWidth + X] = color;
+				vec3 color = trace(camera.getRay(X, Y));
+				image[Y * windowWidth + X] = vec4(color.x, color.y, color.z, 1);
 			}
 		}
 
@@ -295,44 +219,40 @@ public:
 		return false;
 	}
 
-	vec3 trace(Ray ray, int depth, bool onlyReflective = false) {
-		if (depth > 5) return Lsky;
+	vec3 trace(Ray ray, int depth = 0) {
+		if (depth > 5) return La;
 		Hit hit = firstIntersect(ray);
-		if (hit.t < 0) return Lsky + sunRad * pow(dot(ray.dir, sunDir), 10);
+		if (hit.t < 0) return La;
 
 		vec3 outRadiance(0, 0, 0);
+
 		if (hit.material->type == ROUGH) {
-			if (onlyReflective) {
-				outRadiance = hit.material->ka * La;
-				vec3 shadedPoint = hit.position + hit.normal * epsilon;
-				for (auto lightPoint : lightPoints) {
-					vec3 lightDir = normalize(lightPoint - shadedPoint);
-					float cosTheta = dot(hit.normal, lightDir);
-					float cosTheta1 = fabsf(lightDir.z);
-					if (cosTheta > 0) {	// shadow computation
-						float solidAngle = rTube2 * M_PI * cosTheta1 / dot(lightPoint - shadedPoint, lightPoint - shadedPoint) / lightPoints.size();
-						vec3 radience = trace(Ray(shadedPoint, lightDir), depth + 1, true) * solidAngle;
-						outRadiance = outRadiance + radience * hit.material->kd * cosTheta;
-						vec3 halfway = normalize(-ray.dir + lightDir);
-						float cosDelta = dot(hit.normal, halfway);
-						if (cosDelta > 0) outRadiance = outRadiance + radience * hit.material->ks * powf(cosDelta, hit.material->shininess);
-					}
+			outRadiance = hit.material->ka * La;
+			for (Light* light : lights) {
+				Ray shadowRay(hit.position + hit.normal * epsilon, light->direction);
+				float cosTheta = dot(hit.normal, light->direction);
+				if (cosTheta > 0 && !shadowIntersect(shadowRay)) {	// shadow computation
+					outRadiance = outRadiance + light->Le * hit.material->kd * cosTheta;
+					vec3 halfway = normalize(-ray.dir + light->direction);
+					float cosDelta = dot(hit.normal, halfway);
+					if (cosDelta > 0) outRadiance = outRadiance + light->Le * hit.material->ks * powf(cosDelta, hit.material->shininess);
 				}
-				return outRadiance;
 			}
 		}
-		else {
-			float cosa = -dot(ray.dir, hit.normal);
-			vec3 F = hit.material->F0 + (one - hit.material->F0) * pow(1 - cosa, 5);
+		if (hit.material->type == REFLECTIVE) {
 			vec3 reflectedDir = ray.dir - hit.normal * dot(hit.normal, ray.dir) * 2.0f;
-			return trace(Ray(hit.position + hit.normal * epsilon, reflectedDir), depth + 1, false) * F;
+			float cosa = -dot(ray.dir, hit.normal);
+			vec3 one(1, 1, 1);
+			vec3 F = hit.material->F0 + (one - hit.material->F0) * pow(1 - cosa, 5);
+			outRadiance = outRadiance +
+				trace(Ray(hit.position + hit.normal * epsilon, reflectedDir), depth + 1) * F;
 		}
+		return outRadiance;
 	}
-	/*
+
 	void Animate(float dt) {
 		camera.Animate(dt);
 	}
-	*/
 };
 
 GPUProgram gpuProgram; // vertex and fragment shaders
@@ -390,9 +310,9 @@ public:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
 
-	void LoadTexture(std::vector<vec3>& image) {
+	void LoadTexture(std::vector<vec4>& image) {
 		glBindTexture(GL_TEXTURE_2D, textureId);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, windowWidth, windowHeight, 0, GL_RGB, GL_FLOAT, &image[0]); // TO GPU
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, windowWidth, windowHeight, 0, GL_RGBA, GL_FLOAT, &image[0]); // TO GPU
 	}
 
 	void Draw() {
@@ -420,7 +340,7 @@ void onInitialization() {
 
 // Window has become invalid: Redraw
 void onDisplay() {
-	std::vector<vec3> image(windowWidth * windowHeight);
+	std::vector<vec4> image(windowWidth * windowHeight);
 	scene.render(image);								// Execute ray casting
 	fullScreenTexturedQuad->LoadTexture(image);		// copy image to GPU as a texture
 	fullScreenTexturedQuad->Draw();						// Display rendered image on screen
@@ -446,8 +366,6 @@ void onMouseMotion(int pX, int pY) {
 
 // Idle event indicating that some time elapsed: do animation here
 void onIdle() {
-	/*
 	scene.Animate(0.1f);
 	glutPostRedisplay();
-	*/
 }
