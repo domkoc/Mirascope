@@ -84,7 +84,9 @@ struct Material {
 	vec3 F0;
 	MaterialType type;
 
-	Material(MaterialType t) { type = t; }
+	Material(MaterialType t) {
+		type = t;
+	}
 };
 
 struct RoughMaterial : Material {
@@ -96,7 +98,9 @@ struct RoughMaterial : Material {
 	}
 };
 
-vec3 operator/(vec3 num, vec3 denom) { return vec3(num.x / denom.x, num.y / denom.y, num.z / denom.z); }
+vec3 operator/(vec3 num, vec3 denom) {
+	return vec3(num.x / denom.x, num.y / denom.y, num.z / denom.z);
+}
 
 struct ReflectiveMaterial : Material {
 	ReflectiveMaterial(vec3 n, vec3 kappa) : Material(REFLECTIVE) {
@@ -109,7 +113,10 @@ struct Hit {
 	float t;
 	vec3 position, normal;
 	Material* material;
-	Hit() { t = -1; }
+
+	Hit() {
+		t = -1;
+	}
 };
 
 struct Ray {
@@ -250,7 +257,7 @@ struct Plane : public Intersectable {
 
 		float result = dot(normal, (point - P0));
 
-		if (result<epsilon && result >(-1 * epsilon)) {
+		if (result < epsilon && result > (-1 * epsilon)) {
 			return 0;
 		}
 		if (result < 0) {
@@ -268,15 +275,21 @@ struct KParaboloid : public Intersectable {
 	Plane* p;
 
 	KParaboloid(const vec3& _vertex, float _a, float _b, Plane* _p, Material* _material) {
-		vertex = _vertex; a = _a; b = _b; p = _p; material = _material;
+		vertex = _vertex;
+		a = _a;
+		b = _b;
+		p = _p;
+		material = _material;
 	}
 
 	Hit intersect(const Ray& ray) {
 		Hit hit;
 
 		float A = (ray.dir.x * ray.dir.x) / (a * a) + (ray.dir.z * ray.dir.z) / (b * b);
-		float B = (2.0 * ray.dir.x * (ray.start.x - vertex.x)) / (a * a) + (2.0 * ray.dir.z * (ray.start.z - vertex.z)) / (b * b) + ray.dir.y;
-		float C = ((ray.start.x - vertex.x) * (ray.start.x - vertex.x)) / (a * a) + ((ray.start.z - vertex.z) * (ray.start.z - vertex.z)) / (b * b) + (ray.start.y - vertex.y);
+		float B = (2.0 * ray.dir.x * (ray.start.x - vertex.x)) / (a * a) + (2.0 * ray.dir.z * (ray.start.z - vertex.z))
+			/ (b * b) + ray.dir.y;
+		float C = ((ray.start.x - vertex.x) * (ray.start.x - vertex.x)) / (a * a) + ((ray.start.z - vertex.z) * (ray.
+			start.z - vertex.z)) / (b * b) + (ray.start.y - vertex.y);
 
 		float discr = B * B - 4.0f * A * C;
 		if (discr < 0) return hit;
@@ -344,23 +357,25 @@ struct Paraboloid : public Intersectable {
 
 	Hit intersect(const Ray& ray) {
 		Hit hit;
-		auto a = (dot(ray.dir, ray.dir) - dot(n0, n0)* dot(ray.dir, ray.dir));
-		auto b = ((2* dot(ray.start, ray.dir))-(2* dot(focus, ray.dir))-(2*dot(n0,n0) * dot(ray.start, ray.dir))+2*dot(n0, n0)* dot(p0, ray.dir));
-		auto c = (dot(ray.start, ray.start)-(2*dot(focus, ray.start))+dot(focus, focus)-(dot(n0,n0)* dot(ray.start, ray.start))+(2*dot(n0,n0) * dot(p0, ray.start))+dot(n0, n0) * dot(p0,p0));
+		auto a = (dot(ray.dir, ray.dir) - dot(n0, n0) * dot(ray.dir, ray.dir));
+		auto b = ((2 * dot(ray.start, ray.dir)) - (2 * dot(focus, ray.dir)) - (2 * dot(n0, n0) * dot(ray.start, ray.dir)
+		) + 2 * dot(n0, n0) * dot(p0, ray.dir));
+		auto c = (dot(ray.start, ray.start) - (2 * dot(focus, ray.start)) + dot(focus, focus) - (dot(n0, n0) *
+			dot(ray.start, ray.start)) + (2 * dot(n0, n0) * dot(p0, ray.start)) + dot(n0, n0) * dot(p0, p0));
 		auto discr = b * b - 4.0f * a * c;
 		if (discr < 0) return hit;
 		float sqrt_discr = sqrtf(discr);
-		
+
 		float t1 = (-b + sqrt_discr) / 2.0f / a; // t1 >= t2 for sure
 		vec3 p1 = ray.start + ray.dir * t1;
 		//if (p1.z < zmin || p1.z > zmax) t1 = -1;
-		
+
 		float t2 = (-b - sqrt_discr) / 2.0f / a;
 		vec3 p2 = ray.start + ray.dir * t2;
 		//if (p2.z < zmin || p2.z > zmax) t2 = -1;
-		
+
 		if (t1 <= 0) return hit;
-		
+
 		hit.t = (t2 > 0) ? t2 : t1;
 		if (hit.t <= 0) return hit;
 		hit.position = ray.start + ray.dir * hit.t;
@@ -393,28 +408,84 @@ struct Paraboloid : public Intersectable {
 	}
 };
 
-struct Dodekaeder : Intersectable {
-	vec3 center;
-	float scale;
-	Dodekaeder(const vec3& _center, float _scale, Material* _material) {
-		center = _center;
-		scale = _scale;
+struct Otszog : Intersectable {
+	vec3 r1, r2, r3, r4, r5;
+
+	Otszog(vec3 _r1, vec3 _r2, vec3 _r3, vec3 _r4, vec3 _r5, Material* _material) {
+		r1 = _r1;
+		r2 = _r2;
+		r3 = _r3;
+		r4 = _r4;
+		r5 = _r5;
 		material = _material;
 	}
 
 	Hit intersect(const Ray& ray) {
 		Hit hit;
-		vec3 dist = ray.start - center;
+		//1. sikmetszes:
+		vec3 normal = cross((r2 - r1), (r3 - r1));
+		float t = dot((r1 - ray.start), normal) / dot(ray.dir, normal);
+		vec3 p = ray.start + ray.dir * t;
+		//2. A metszes az otszogon belul van-e?
+		float r2r1pn = dot(cross((r2 - r1), (p - r1)), normal);
+		if (r2r1pn <= 0) return hit;
+		float r3r2pn = dot(cross((r3 - r2), (p - r2)), normal);
+		if (r3r2pn <= 0) return hit;
+		float r4r3pn = dot(cross((r4 - r3), (p - r3)), normal);
+		if (r4r3pn <= 0) return hit;
+		float r5r4pn = dot(cross((r5 - r4), (p - r4)), normal);
+		if (r5r4pn <= 0) return hit;
+		float r1r5pn = dot(cross((r1 - r5), (p - r5)), normal);
+		if (r1r5pn <= 0) return hit;
+		if (t <= 0) return hit;
+
+		hit.t = t;
+		hit.position = ray.start + ray.dir * hit.t;
+		hit.normal = normalize(normal);
+		//hit.position = hit.position + translation;
+		hit.material = material;
+		return hit;
+
+	}
+};
+
+struct Dodekaeder : Intersectable {
+	vec3 center;
+	float scale;
+	std::vector<Otszog> sides;
+
+	Dodekaeder(const vec3& _center, float _scale, Material* _material) {
+		center = _center;
+		scale = _scale;
+		material = _material;
+		for (int i = 0; i < 12; ++i) {
+			vec3 r1 = (ctrlPointDodekaeder[cornersDodekaeder[i][0] - 1] * scale) + center;
+			vec3 r2 = (ctrlPointDodekaeder[cornersDodekaeder[i][1] - 1] * scale) + center;
+			vec3 r3 = (ctrlPointDodekaeder[cornersDodekaeder[i][2] - 1] * scale) + center;
+			vec3 r4 = (ctrlPointDodekaeder[cornersDodekaeder[i][3] - 1] * scale) + center;
+			vec3 r5 = (ctrlPointDodekaeder[cornersDodekaeder[i][4] - 1] * scale) + center;
+			Otszog otszog(r1, r2, r3, r4, r5, material);
+			sides.push_back(otszog);
+		}
+
+
 	}
 
-
-	/*for (int i = 0; i < 12; ++i)
-	{
-		for (int j = 0; j < 5; ++j)
-		{
-			printf("sor: %i, oszlop:%i, ertek: %i \n", i, j, cornersDodekaeder[i][j]);
+	Hit intersect(const Ray& ray) {
+		Hit hit;
+		for (Otszog otszog : sides) {
+			Hit currentHit = otszog.intersect(ray);
+			if (currentHit.t > 0) {
+				if (hit.t > 0) {
+					if (currentHit.t < hit.t) hit = currentHit;
+				}
+				else {
+					hit = currentHit;
+				}
+			}
 		}
-	}*/
+		return hit;
+	}
 };
 
 class Camera {
@@ -468,7 +539,9 @@ struct Light {
 	}
 };
 
-float rnd() { return (float)rand() / RAND_MAX; }
+float rnd() {
+	return (float)rand() / RAND_MAX;
+}
 
 class Scene {
 	std::vector<Intersectable*> objects;
@@ -477,7 +550,7 @@ class Scene {
 	vec3 La;
 public:
 	void build() {
-		vec3 eye = vec3(0, 3, 0);
+		vec3 eye = vec3(0, 10, 0);
 		vec3 vup = vec3(0, 0, 1);
 		vec3 lookat = vec3(0, 0, 0);
 		float fov = 45 * M_PI / 180;
@@ -496,6 +569,8 @@ public:
 		vec3 kappa(5, 4, 3);
 		Material* material2 = new ReflectiveMaterial(n, kappa);
 		Material* gold = new ReflectiveMaterial(vec3(0.17, 0.35, 1.5), vec3(3.1, 2.7, 1.9));
+
+		objects.push_back(new Dodekaeder(vec3(0, 0, 0), 1, material1));
 
 		//for (int i = 0; i < 150; i++)
 		//{
@@ -596,9 +671,13 @@ public:
 		return outRadiance;
 	}
 
-	void Lift(float dt) { camera.Lift(dt); }
+	void Lift(float dt) {
+		camera.Lift(dt);
+	}
 
-	void Animate(float dt) { camera.Animate(dt); }
+	void Animate(float dt) {
+		camera.Animate(dt);
+	}
 };
 
 GPUProgram gpuProgram; // vertex and fragment shaders
