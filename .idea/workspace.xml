@@ -27,6 +27,9 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Pull.Settings">
+    <option name="BRANCH" value="master" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -86,6 +89,14 @@
       <workItem from="1585845079632" duration="601000" />
       <workItem from="1585845905810" duration="569000" />
     </task>
+    <task id="LOCAL-00001" summary="added animation">
+      <created>1604515625713</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1604515625713</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -107,8 +118,14 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
+    <MESSAGE value="added animation" />
+    <option name="LAST_COMMIT_MESSAGE" value="added animation" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="212" y="0" key="CommitChangelistDialog2" timestamp="1604515625481">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="212" y="0" key="CommitChangelistDialog2/0.0.1280.800@0.0.1280.800" timestamp="1604515625481" />
     <state x="474" y="304" key="Github.ShareDialog" timestamp="1604499619219">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
@@ -117,54 +134,58 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="383" y="105" key="Github.UntrackedFilesDialog/0.0.1280.800@0.0.1280.800" timestamp="1604499627489" />
-    <state width="1238" height="209" key="GridCell.Tab.0.bottom" timestamp="1604499494928">
+    <state width="1238" height="209" key="GridCell.Tab.0.bottom" timestamp="1604701119374">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="1238" height="209" key="GridCell.Tab.0.bottom/0.0.1280.800@0.0.1280.800" timestamp="1604499494928" />
+    <state width="1238" height="209" key="GridCell.Tab.0.bottom/0.0.1280.800@0.0.1280.800" timestamp="1604701119374" />
     <state width="1238" height="173" key="GridCell.Tab.0.bottom/0.23.1280.706@0.23.1280.706" timestamp="1601474289720" />
-    <state width="1238" height="209" key="GridCell.Tab.0.center" timestamp="1604499494926">
+    <state width="1238" height="209" key="GridCell.Tab.0.center" timestamp="1604701119369">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="1238" height="209" key="GridCell.Tab.0.center/0.0.1280.800@0.0.1280.800" timestamp="1604499494926" />
+    <state width="1238" height="209" key="GridCell.Tab.0.center/0.0.1280.800@0.0.1280.800" timestamp="1604701119369" />
     <state width="1238" height="173" key="GridCell.Tab.0.center/0.23.1280.706@0.23.1280.706" timestamp="1601474289718" />
-    <state width="1238" height="209" key="GridCell.Tab.0.left" timestamp="1604499494925">
+    <state width="1238" height="209" key="GridCell.Tab.0.left" timestamp="1604701119368">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="1238" height="209" key="GridCell.Tab.0.left/0.0.1280.800@0.0.1280.800" timestamp="1604499494925" />
+    <state width="1238" height="209" key="GridCell.Tab.0.left/0.0.1280.800@0.0.1280.800" timestamp="1604701119368" />
     <state width="1238" height="173" key="GridCell.Tab.0.left/0.23.1280.706@0.23.1280.706" timestamp="1601474289716" />
-    <state width="1238" height="209" key="GridCell.Tab.0.right" timestamp="1604499494927">
+    <state width="1238" height="209" key="GridCell.Tab.0.right" timestamp="1604701119370">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="1238" height="209" key="GridCell.Tab.0.right/0.0.1280.800@0.0.1280.800" timestamp="1604499494927" />
+    <state width="1238" height="209" key="GridCell.Tab.0.right/0.0.1280.800@0.0.1280.800" timestamp="1604701119370" />
     <state width="1238" height="173" key="GridCell.Tab.0.right/0.23.1280.706@0.23.1280.706" timestamp="1601474289719" />
-    <state width="1238" height="264" key="GridCell.Tab.1.bottom" timestamp="1601560176549">
+    <state width="1238" height="262" key="GridCell.Tab.1.bottom" timestamp="1604683655648">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="1238" height="264" key="GridCell.Tab.1.bottom/0.0.1280.800@0.0.1280.800" timestamp="1601560176549" />
-    <state width="1238" height="264" key="GridCell.Tab.1.center" timestamp="1601560176548">
+    <state width="1238" height="262" key="GridCell.Tab.1.bottom/0.0.1280.800@0.0.1280.800" timestamp="1604683655648" />
+    <state width="1238" height="262" key="GridCell.Tab.1.center" timestamp="1604683655646">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="1238" height="264" key="GridCell.Tab.1.center/0.0.1280.800@0.0.1280.800" timestamp="1601560176548" />
-    <state width="1238" height="264" key="GridCell.Tab.1.left" timestamp="1601560176548">
+    <state width="1238" height="262" key="GridCell.Tab.1.center/0.0.1280.800@0.0.1280.800" timestamp="1604683655646" />
+    <state width="1238" height="262" key="GridCell.Tab.1.left" timestamp="1604683655646">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="1238" height="264" key="GridCell.Tab.1.left/0.0.1280.800@0.0.1280.800" timestamp="1601560176548" />
-    <state width="1238" height="264" key="GridCell.Tab.1.right" timestamp="1601560176548">
+    <state width="1238" height="262" key="GridCell.Tab.1.left/0.0.1280.800@0.0.1280.800" timestamp="1604683655646" />
+    <state width="1238" height="262" key="GridCell.Tab.1.right" timestamp="1604683655648">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="1238" height="264" key="GridCell.Tab.1.right/0.0.1280.800@0.0.1280.800" timestamp="1601560176548" />
+    <state width="1238" height="262" key="GridCell.Tab.1.right/0.0.1280.800@0.0.1280.800" timestamp="1604683655648" />
     <state x="141" y="23" key="SettingsEditor" timestamp="1604499578932">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="141" y="23" key="SettingsEditor/0.0.1280.800@0.0.1280.800" timestamp="1604499578932" />
-    <state x="438" y="321" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604515570639">
+    <state x="240" y="140" key="Vcs.Push.Dialog.v2" timestamp="1604515635423">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="438" y="321" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.800@0.0.1280.800" timestamp="1604515570639" />
-    <state x="305" y="114" width="670" height="767" key="search.everywhere.popup" timestamp="1604508697539">
+    <state x="240" y="140" key="Vcs.Push.Dialog.v2/0.0.1280.800@0.0.1280.800" timestamp="1604515635423" />
+    <state x="438" y="321" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604683401740">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="305" y="114" width="670" height="767" key="search.everywhere.popup/0.0.1280.800@0.0.1280.800" timestamp="1604508697539" />
+    <state x="438" y="321" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.800@0.0.1280.800" timestamp="1604683401740" />
+    <state x="305" y="114" width="670" height="767" key="search.everywhere.popup" timestamp="1604700948017">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="305" y="114" width="670" height="767" key="search.everywhere.popup/0.0.1280.800@0.0.1280.800" timestamp="1604700948017" />
     <state x="305" y="124" width="670" height="676" key="search.everywhere.popup/0.23.1280.706@0.23.1280.706" timestamp="1601480686924" />
   </component>
 </project>

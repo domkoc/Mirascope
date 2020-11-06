@@ -33,6 +33,8 @@
 //=============================================================================================
 #include "framework.h"
 
+//forrásként felhasználva az előadáshoz tartozó példa kódok
+
 std::vector<vec3> ctrlPointDodekaeder = {
 	vec3(0, 0.618, 1.618),
 	vec3(0, -0.618, 1.618),
@@ -319,6 +321,7 @@ public:
 		vec3 lookat = vec3(0, 0, 0);
 		float fov = 45.0f * M_PI / 180;
 		camera.set(eye, lookat, vup, fov);
+		camera.Lift(-0.7f);
 
 		La = vec3(0.4f, 0.4f, 0.4f);
 		vec3 lightDirection(0.2f, 0.2f, 0.2f);
@@ -516,11 +519,11 @@ void onDisplay() {
 // Key of ASCII code pressed
 void onKeyboard(unsigned char key, int pX, int pY) {
 	if (key == 'f') {
-		scene.Lift(-0.1f);
+		scene.Lift(-0.2f);
 		glutPostRedisplay();
 	}
 	if (key == 'F') {
-		scene.Lift(0.1f);
+		scene.Lift(0.2f);
 		glutPostRedisplay();
 	}
 }
