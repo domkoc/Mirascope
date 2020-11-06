@@ -553,12 +553,12 @@ public:
 		vec3 eye = vec3(0, 2, 0);
 		vec3 vup = vec3(0, 0, 1);
 		vec3 lookat = vec3(0, 0, 0);
-		float fov = 45 * M_PI / 180;
+		float fov = 67.5f * M_PI / 180;
 		camera.set(eye, lookat, vup, fov);
 
 		La = vec3(0.4f, 0.4f, 0.4f);
-		vec3 lightDirection(1, 1, 1),
-		     Le(2, 2, 2);
+		vec3 lightDirection(1, 1, 1);
+		vec3 Le(2, 2, 2);
 		lights.push_back(new Light(lightDirection, Le));
 
 		vec3 kd1(0.3f, 0.2f, 0.1f);
@@ -651,7 +651,7 @@ public:
 			for (Light* light : lights) {
 				Ray shadowRay(hit.position + hit.normal * epsilon, light->direction);
 				float cosTheta = dot(hit.normal, light->direction);
-				if (cosTheta > 0 && !shadowIntersect(shadowRay)) {
+				if (cosTheta > 0 /*&& !shadowIntersect(shadowRay)*/) {
 					// shadow computation
 					outRadiance = outRadiance + light->Le * hit.material->kd * cosTheta;
 					vec3 halfway = normalize(-ray.dir + light->direction);
