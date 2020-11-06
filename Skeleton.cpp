@@ -36,7 +36,7 @@
 std::vector<vec3> ctrlPointDodekaeder = {
 	vec3(0, 0.618, 1.618),
 	vec3(0, -0.618, 1.618),
-	vec3(0, -0.618 - 1.618),
+	vec3(0, -0.618, - 1.618),
 	vec3(0, 0.618, -1.618),
 	vec3(1.618, 0, 0.618),
 	vec3(-1.618, 0, 0.618),
@@ -550,7 +550,7 @@ class Scene {
 	vec3 La;
 public:
 	void build() {
-		vec3 eye = vec3(0, 10, 0);
+		vec3 eye = vec3(0, 2, 0);
 		vec3 vup = vec3(0, 0, 1);
 		vec3 lookat = vec3(0, 0, 0);
 		float fov = 45 * M_PI / 180;
@@ -564,13 +564,15 @@ public:
 		vec3 kd1(0.3f, 0.2f, 0.1f);
 		vec3 kd2(0.1f, 0.2f, 0.3f);
 		vec3 ks(2, 2, 2);
-		Material* material1 = new RoughMaterial(kd1, ks, 50);
+		Material* roomMaterial = new RoughMaterial(kd1, ks, 50);
+		Material* objMetarial = new RoughMaterial(kd2, ks, 50);
 		vec3 n(1, 1, 1);
 		vec3 kappa(5, 4, 3);
 		Material* material2 = new ReflectiveMaterial(n, kappa);
 		Material* gold = new ReflectiveMaterial(vec3(0.17, 0.35, 1.5), vec3(3.1, 2.7, 1.9));
 
-		objects.push_back(new Dodekaeder(vec3(0, 0, 0), 1, material1));
+		objects.push_back(new Dodekaeder(vec3(0, 0, 0), 2.5f, roomMaterial));
+		objects.push_back(new Dodekaeder(vec3(0, 0, 0), 0.1f, objMetarial));
 
 		//for (int i = 0; i < 150; i++)
 		//{
