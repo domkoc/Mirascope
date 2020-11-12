@@ -302,10 +302,12 @@ public:
 struct Light {
 	vec3 direction;
 	vec3 Le;
+	vec3 startingPoint;
 
-	Light(vec3 _direction, vec3 _Le) {
+	Light(vec3 _direction, vec3 _Le, vec3 _startingPoint) {
 		direction = normalize(_direction);
 		Le = _Le;
+		startingPoint =normalize(_startingPoint);
 	}
 };
 
@@ -326,7 +328,8 @@ public:
 		La = vec3(0.4f, 0.4f, 0.4f);
 		vec3 lightDirection(0.2f, 0.2f, 0.2f);
 		vec3 Le(2, 2, 2);
-		lights.push_back(new Light(lightDirection, Le));
+		vec3 startingPoint(0.5f, 0.5f, 0.5f);
+		lights.push_back(new Light(lightDirection, Le, startingPoint));
 
 		vec3 kd1(0.3f, 0.2f, 0.1f);
 		vec3 kd2(0.1f, 0.2f, 0.3f);
@@ -392,12 +395,12 @@ public:
 		if (hit.material->type == ROUGH) {
 			outRadiance = hit.material->ka * La;
 			for (Light* light : lights) {
-				Ray shadowRay(hit.position + hit.normal * epsilon, light->direction);
-				float cosTheta = dot(hit.normal, light->direction);
+				Ray shadowRay(hit.position + hit.normal * epsilon, normalize((light->startingPoint) - (hit.position + hit.normal * epsilon)));
+				float cosTheta = dot(hit.normal, normalize((light->startingPoint) - (hit.position + hit.normal * epsilon)));
 				if (cosTheta > 0) {
 					// shadow computation
 					outRadiance = outRadiance + light->Le * hit.material->kd * cosTheta;
-					vec3 halfway = normalize(-ray.dir + light->direction);
+					vec3 halfway = normalize(-ray.dir + normalize((light->startingPoint) - (hit.position + hit.normal * epsilon)));
 					float cosDelta = dot(hit.normal, halfway);
 					if (cosDelta > 0)
 						outRadiance = outRadiance + light->Le * hit.material->ks * powf(
